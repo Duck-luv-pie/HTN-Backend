@@ -9,14 +9,33 @@ This is my submission for the Hack the North 2025 Backend Challenge. The project
 
 Use http://34.170.197.1/docs to access FastAPI deployment. This was done using Google Cloud and Kubernetes cluster
 
-## Key Features:
-- Attendee Management: Store and manage hackathon attendee data (name, email, phone, badge code).
-- Activity Tracking: Track badge scans for different activities with built-in scan limit restrictions (e.g., midnight snack).
-- Check-In System: Allow users to check in/out of activities with real-time status updates.
-- Friend System: Users can add other attendees as friends, creating a mutual friend relationship.
-- Analytics: Aggregated endpoints to analyze scan frequencies over time.
-- RESTful API: Well-structured endpoints with validation and error handling.
-- Database Persistence: Leveraging SQLAlchemy for robust and scalable data management.
+## Important Decisions:
+
+**Choosing FastAPI for the Backend**
+I chose FastAPI because it’s lightweight, fast, and built for modern Python development. It has automatic documentation with Swagger UI, making API testing seamless. Additionally, Pydantic provides strong data validation, reducing the chances of malformed requests.
+
+**Using SQLAlchemy with SQLite**
+I used SQLAlchemy for ORM because it offers flexibility and direct control over queries. SQLite was chosen for local development because it’s lightweight, but the system can easily switch to PostgreSQL or MySQL for production.
+
+**Enforcing Scan Limits**
+To prevent users from over-scanning activities (e.g., taking too many snacks), I implemented a scan limit system. Each activity has a predefined limit, and users attempting to scan beyond that get a 403 Forbidden error.
+
+**Real-Time Check-In System**
+Instead of persisting check-in data in the database, I used an in-memory dictionary (checked_in_users) to track active check-ins. This keeps operations fast and efficient, as check-in state doesn’t need to persist between sessions.
+
+**Mutual Friend System**
+The friend system ensures that friendships are always mutual—if User A adds User B, then User B also has User A as a friend. This prevents one-sided friendships and makes querying relationships easier.
+
+**Testing Strategy**
+I set up pytest with a temporary SQLite database that resets before every test. This ensures tests are isolated, consistent, and repeatable, avoiding data conflicts between test runs.
+
+**Deployment: Google Cloud + Kubernetes**
+I deployed the backend on Google Cloud using Kubernetes (GKE) to ensure scalability and containerized orchestration.
+Google Cloud Kubernetes Engine (GKE): Manages deployment and auto-scaling.
+Dockerized Backend: The API runs in a container, ensuring a consistent environment across deployments.
+Ingress for Routing: Configured Kubernetes ingress for exposing the API securely.
+Cloud IAM & Authentication: Ensured that API access is controlled via Google Cloud IAM.
+This setup makes the backend scalable, resilient, and production-ready, while also giving me hands-on experience with cloud deployment.
 
 ## Tech Stack:
 - Backend Framework: FastAPI
@@ -25,6 +44,57 @@ Use http://34.170.197.1/docs to access FastAPI deployment. This was done using G
 - Hosting: Google Cloud (with Kubernetes)
 - Containerization: Docker
 - Testing: pytest with FastAPI's TestClient
+
+## Library/Dependency Documentation:
+**Core Dependencies**
+FastAPI (0.115.8) – High-performance web framework for building APIs.
+SQLAlchemy (2.0.37) – ORM for database interactions.
+Pydantic (2.10.6) – Data validation and serialization for FastAPI.
+Starlette (0.45.3) – ASGI framework used by FastAPI.
+Uvicorn (0.34.0) – ASGI server for running the FastAPI app.
+
+**Networking & HTTP**
+httpx (0.28.1) – Async HTTP client used for API requests.
+httpcore (1.0.7) – Low-level HTTP networking for httpx.
+h11 (0.14.0) – HTTP/1.1 networking used internally by ASGI
+
+**Validation & Parsing**
+email_validator (2.2.0) – Validates email formats in user registration.
+annotated-types (0.7.0) – Provides enhanced type annotations.
+idna (3.10) – Internationalized domain name support.
+
+**Database & Async Support**
+Greenlet (3.1.1) – Enables coroutine-based SQLAlchemy operations.
+dnspython (2.7.0) – Provides DNS resolution for database connections.
+
+**Testing & Configuration**
+pytest (8.3.4) – Unit testing framework.
+pluggy (1.5.0) – Plugin management for pytest.
+iniconfig (2.0.0) – Configuration management for pytest.
+tomli (2.2.1) – TOML parsing for configuration files.
+
+**Misc**
+certifi (2025.1.31) – SSL certificates for secure HTTPS requests.
+sniffio (1.3.1) – Detects sync/async execution environments.
+click (8.1.8) – Command-line utility for scripts.
+exceptiongroup (1.2.2) – Handles multiple exceptions in async code.
+packaging (24.2) – Package version parsing.
+typing_extensions (4.12.2) – Backports for newer type hints.
+
+## Assumptions & Edge Cases Fulfilled
+- Users must have a unique email and badge code. 
+- Scan limits are strictly enforced.
+- Users cannot add themselves as friends.
+- Check-in status persists until checkout is called.
+
+## Key Features:
+- Attendee Management: Store and manage hackathon attendee data (name, email, phone, badge code).
+- Activity Tracking: Track badge scans for different activities with built-in scan limit restrictions (e.g., midnight snack).
+- Check-In System: Allow users to check in/out of activities with real-time status updates.
+- Friend System: Users can add other attendees as friends, creating a mutual friend relationship.
+- Analytics: Aggregated endpoints to analyze scan frequencies over time.
+- RESTful API: Well-structured endpoints with validation and error handling.
+- Database Persistence: Leveraging SQLAlchemy for robust and scalable data management.
 
 ## Set-up Instructions (your own repo):
 Clone the repo:
@@ -39,12 +109,7 @@ Run server (local):
 Access Interactive Doc:
     http://localhost:8000/docs
 
-
-## Assumptions & Edge Cases Fulfilled
-- Users must have a unique email and badge code. 
-- Scan limits are strictly enforced.
-- Users cannot add themselves as friends.
-- Check-in status persists until checkout is called.
+Or go to http://34.170.197.1/docs to access the FastAPI deployment on google cloud.
 
 ## pytest Testing:
 Run " pytest test_main.py " in terminal
@@ -228,35 +293,6 @@ All endpoints return appropriate HTTP error codes:
 403 - Forbidden (e.g., exceeded scan limit)
 404 - Not Found (e.g., user doesn’t exist)
 500 - Internal Server Error
-
-## Important Decisions:
-
-**Choosing FastAPI for the Backend**
-I chose FastAPI because it’s lightweight, fast, and built for modern Python development. It has automatic documentation with Swagger UI, making API testing seamless. Additionally, Pydantic provides strong data validation, reducing the chances of malformed requests.
-
-**Using SQLAlchemy with SQLite**
-I used SQLAlchemy for ORM because it offers flexibility and direct control over queries. SQLite was chosen for local development because it’s lightweight, but the system can easily switch to PostgreSQL or MySQL for production.
-
-**Enforcing Scan Limits**
-To prevent users from over-scanning activities (e.g., taking too many snacks), I implemented a scan limit system. Each activity has a predefined limit, and users attempting to scan beyond that get a 403 Forbidden error.
-
-**Real-Time Check-In System**
-Instead of persisting check-in data in the database, I used an in-memory dictionary (checked_in_users) to track active check-ins. This keeps operations fast and efficient, as check-in state doesn’t need to persist between sessions.
-
-**Mutual Friend System**
-The friend system ensures that friendships are always mutual—if User A adds User B, then User B also has User A as a friend. This prevents one-sided friendships and makes querying relationships easier.
-
-**Testing Strategy**
-I set up pytest with a temporary SQLite database that resets before every test. This ensures tests are isolated, consistent, and repeatable, avoiding data conflicts between test runs.
-
-**Deployment: Google Cloud + Kubernetes**
-I deployed the backend on Google Cloud using Kubernetes (GKE) to ensure scalability and containerized orchestration.
-Google Cloud Kubernetes Engine (GKE): Manages deployment and auto-scaling.
-Dockerized Backend: The API runs in a container, ensuring a consistent environment across deployments.
-Ingress for Routing: Configured Kubernetes ingress for exposing the API securely.
-Cloud IAM & Authentication: Ensured that API access is controlled via Google Cloud IAM.
-This setup makes the backend scalable, resilient, and production-ready, while also giving me hands-on experience with cloud deployment.
-
 
 ## BONUS FEATURES ADDED:
 - Real-time Check-In System: Users can check in and out of events, and their status is updated live.

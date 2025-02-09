@@ -112,7 +112,7 @@ def get_user(badge_code: str, db: Session = Depends(get_db)):
         ]
     }
 
-#Let users make friends (unimaginable lmao from exp)
+#Let users make friends 
 @router.post("/users/{badge_code}/add-friend/{friend_badge}")
 def add_friend(badge_code: str, friend_badge: str, db: Session = Depends(get_db)):
     if badge_code == friend_badge:
