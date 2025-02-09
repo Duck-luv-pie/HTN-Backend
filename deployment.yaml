@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Service
+apiVersion: v1
+metadata:
+  name: fastapi-service
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 34.170.197.1
+  selector:
+    app: fastapi
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
