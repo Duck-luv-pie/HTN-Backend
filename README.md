@@ -1,8 +1,34 @@
 # HTN 2025 Backend Challenge
 
-## INFO FOR REVIEWER:
-
-## Table of Contents
+## 📌 Table of Contents
+1. [Introduction](#introduction)
+2. [Important Decisions](#important-decisions)
+   - [Choosing FastAPI for the Backend](#choosing-fastapi-for-the-backend)
+   - [Using SQLAlchemy with SQLite](#using-sqlalchemy-with-sqlite)
+   - [Enforcing Scan Limits](#enforcing-scan-limits)
+   - [Real-Time Check-In System](#real-time-check-in-system)
+   - [Mutual Friend System](#mutual-friend-system)
+   - [Testing Strategy](#testing-strategy)
+   - [Deployment: Google Cloud + Kubernetes](#deployment-google-cloud--kubernetes)
+3. [Tech Stack](#tech-stack)
+4. [Library/Dependency Documentation](#librarydependency-documentation)
+5. [Fulfilled Assumptions & Edge Cases](#assumptions--edge-cases-fulfilled)
+6. [Key Features](#key-features)
+7. [Set-up Instructions](#set-up-instructions-your-own-repo)
+8. [pytest Testing](#pytest-testing)
+9. [API Documentation](#api-documentation)
+   - [Get All Users](#get-all-users-endpoint)
+   - [Get User Information](#get-user-information-endpoint)
+   - [Create a New User](#create-a-new-user-endpoint)
+   - [Update User Information](#update-user-information-endpoint)
+   - [Add a Scan for a User](#add-a-scan-for-a-user-endpoint)
+   - [Get All Scans](#get-all-scans)
+   - [Get Activity Scan Analytics](#get-activity-scan-analytics)
+   - [Check-In & Check-Out](#check-in--check-out-endpoints)
+   - [Friend System](#friend-system-endpoint)
+   - [Get All Checked-In Users](#get-all-checked-in-users)
+10. [Error Handling](#error-handling)
+11. [Bonus Features Added](#bonus-features-added)
 
 ## Introduction:
 - This is my submission for the **Hack the North 2025 Backend Challenge**. The project implements a backend API that tracks hackathon attendees, their badge scans, and activities. The system is built to store user data, check them into activities, and provide aggregated insights.
@@ -85,7 +111,7 @@ Use http://34.170.197.1/docs to **access FastAPI deployment**. This was done usi
 - pip install -r requirements.txt
 
 
-## Assumptions & Edge Cases Fulfilled
+## Fulfilled Assumptions & Edge Cases 
 - Users must have a unique email and badge code. 
 - Scan limits are strictly enforced.
 - Users cannot add themselves as friends.
