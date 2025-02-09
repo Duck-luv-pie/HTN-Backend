@@ -5,37 +5,37 @@
 ## Table of Contents
 
 ## Introduction:
-This is my submission for the Hack the North 2025 Backend Challenge. The project implements a backend API that tracks hackathon attendees, their badge scans, and activities. The system is built to store user data, check them into activities, and provide aggregated insights.
+- This is my submission for the **Hack the North 2025 Backend Challenge**. The project implements a backend API that tracks hackathon attendees, their badge scans, and activities. The system is built to store user data, check them into activities, and provide aggregated insights.
 
-Use http://34.170.197.1/docs to access FastAPI deployment. This was done using Google Cloud and Kubernetes cluster
+Use http://34.170.197.1/docs to **access FastAPI deployment**. This was done using Google Cloud and Kubernetes cluster
 
 ## Important Decisions:
 
-**Choosing FastAPI for the Backend**
-I chose FastAPI because it’s lightweight, fast, and built for modern Python development. It has automatic documentation with Swagger UI, making API testing seamless. Additionally, Pydantic provides strong data validation, reducing the chances of malformed requests.
+**Choosing FastAPI for the Backend**:
+- I chose FastAPI because it’s lightweight, fast, and built for modern Python development. It has automatic documentation with Swagger UI, making API testing seamless. Additionally, Pydantic provides strong data validation, reducing the chances of malformed requests.
 
 **Using SQLAlchemy with SQLite**
-I used SQLAlchemy for ORM because it offers flexibility and direct control over queries. SQLite was chosen for local development because it’s lightweight, but the system can easily switch to PostgreSQL or MySQL for production.
+- I used SQLAlchemy for ORM because it offers flexibility and direct control over queries. SQLite was chosen for local development because it’s lightweight, but the system can easily switch to PostgreSQL or MySQL for production.
 
 **Enforcing Scan Limits**
-To prevent users from over-scanning activities (e.g., taking too many snacks), I implemented a scan limit system. Each activity has a predefined limit, and users attempting to scan beyond that get a 403 Forbidden error.
+- To prevent users from over-scanning activities (e.g., taking too many snacks), I implemented a scan limit system. Each activity has a predefined limit, and users attempting to scan beyond that get a 403 Forbidden error.
 
 **Real-Time Check-In System**
-Instead of persisting check-in data in the database, I used an in-memory dictionary (checked_in_users) to track active check-ins. This keeps operations fast and efficient, as check-in state doesn’t need to persist between sessions.
+- Instead of persisting check-in data in the database, I used an in-memory dictionary (checked_in_users) to track active check-ins. This keeps operations fast and efficient, as check-in state doesn’t need to persist between sessions.
 
 **Mutual Friend System**
-The friend system ensures that friendships are always mutual—if User A adds User B, then User B also has User A as a friend. This prevents one-sided friendships and makes querying relationships easier.
+- The friend system ensures that friendships are always mutual—if User A adds User B, then User B also has User A as a friend. This prevents one-sided friendships and makes querying relationships easier.
 
 **Testing Strategy**
-I set up pytest with a temporary SQLite database that resets before every test. This ensures tests are isolated, consistent, and repeatable, avoiding data conflicts between test runs.
+- I set up pytest with a temporary SQLite database that resets before every test. This ensures tests are isolated, consistent, and repeatable, avoiding data conflicts between test runs.
 
 **Deployment: Google Cloud + Kubernetes**
-I deployed the backend on Google Cloud using Kubernetes (GKE) to ensure scalability and containerized orchestration.
-Google Cloud Kubernetes Engine (GKE): Manages deployment and auto-scaling.
-Dockerized Backend: The API runs in a container, ensuring a consistent environment across deployments.
-Ingress for Routing: Configured Kubernetes ingress for exposing the API securely.
-Cloud IAM & Authentication: Ensured that API access is controlled via Google Cloud IAM.
-This setup makes the backend scalable, resilient, and production-ready, while also giving me hands-on experience with cloud deployment.
+- I deployed the backend on Google Cloud using Kubernetes (GKE) to ensure scalability and containerized orchestration.
+- Google Cloud Kubernetes Engine (GKE): Manages deployment and auto-scaling.
+- Dockerized Backend: The API runs in a container, ensuring a consistent environment across deployments.
+- Ingress for Routing: Configured Kubernetes ingress for exposing the API securely.
+- Cloud IAM & Authentication: Ensured that API access is controlled via Google Cloud IAM.
+- This setup makes the backend scalable, resilient, and production-ready, while also giving me hands-on experience with cloud deployment.
 
 ## Tech Stack:
 - Backend Framework: FastAPI
@@ -47,39 +47,43 @@ This setup makes the backend scalable, resilient, and production-ready, while al
 
 ## Library/Dependency Documentation:
 **Core Dependencies**
-FastAPI (0.115.8) – High-performance web framework for building APIs.
-SQLAlchemy (2.0.37) – ORM for database interactions.
-Pydantic (2.10.6) – Data validation and serialization for FastAPI.
-Starlette (0.45.3) – ASGI framework used by FastAPI.
-Uvicorn (0.34.0) – ASGI server for running the FastAPI app.
+- FastAPI (0.115.8) – High-performance web framework for building APIs.
+- SQLAlchemy (2.0.37) – ORM for database interactions.
+- Pydantic (2.10.6) – Data validation and serialization for FastAPI.
+- Starlette (0.45.3) – ASGI framework used by FastAPI.
+- Uvicorn (0.34.0) – ASGI server for running the FastAPI app.
 
 **Networking & HTTP**
-httpx (0.28.1) – Async HTTP client used for API requests.
-httpcore (1.0.7) – Low-level HTTP networking for httpx.
-h11 (0.14.0) – HTTP/1.1 networking used internally by ASGI
+- httpx (0.28.1) – Async HTTP client used for API requests.
+- httpcore (1.0.7) – Low-level HTTP networking for httpx.
+- h11 (0.14.0) – HTTP/1.1 networking used internally by ASGI
 
 **Validation & Parsing**
-email_validator (2.2.0) – Validates email formats in user registration.
-annotated-types (0.7.0) – Provides enhanced type annotations.
-idna (3.10) – Internationalized domain name support.
+- email_validator (2.2.0) – Validates email formats in user registration.
+- annotated-types (0.7.0) – Provides enhanced type annotations.
+- idna (3.10) – Internationalized domain name support.
 
 **Database & Async Support**
-Greenlet (3.1.1) – Enables coroutine-based SQLAlchemy operations.
-dnspython (2.7.0) – Provides DNS resolution for database connections.
+- Greenlet (3.1.1) – Enables coroutine-based SQLAlchemy operations.
+- dnspython (2.7.0) – Provides DNS resolution for database connections.
 
 **Testing & Configuration**
-pytest (8.3.4) – Unit testing framework.
-pluggy (1.5.0) – Plugin management for pytest.
-iniconfig (2.0.0) – Configuration management for pytest.
-tomli (2.2.1) – TOML parsing for configuration files.
+- pytest (8.3.4) – Unit testing framework.
+- pluggy (1.5.0) – Plugin management for pytest.
+- iniconfig (2.0.0) – Configuration management for pytest.
+- tomli (2.2.1) – TOML parsing for configuration files.
 
 **Misc**
-certifi (2025.1.31) – SSL certificates for secure HTTPS requests.
-sniffio (1.3.1) – Detects sync/async execution environments.
-click (8.1.8) – Command-line utility for scripts.
-exceptiongroup (1.2.2) – Handles multiple exceptions in async code.
-packaging (24.2) – Package version parsing.
-typing_extensions (4.12.2) – Backports for newer type hints.
+- certifi (2025.1.31) – SSL certificates for secure HTTPS requests.
+- sniffio (1.3.1) – Detects sync/async execution environments.
+- click (8.1.8) – Command-line utility for scripts.
+- exceptiongroup (1.2.2) – Handles multiple exceptions in async code.
+- packaging (24.2) – Package version parsing.
+- typing_extensions (4.12.2) – Backports for newer type hints.
+
+**Install all Dependencies:**
+- pip install -r requirements.txt
+
 
 ## Assumptions & Edge Cases Fulfilled
 - Users must have a unique email and badge code. 
@@ -97,22 +101,26 @@ typing_extensions (4.12.2) – Backports for newer type hints.
 - Database Persistence: Leveraging SQLAlchemy for robust and scalable data management.
 
 ## Set-up Instructions (your own repo):
-Clone the repo:
-    git clone https://github.com/Duck-luv-pie/HTN-Backend.git
-    cd HTN-Backend
-Install Dependencies:
-    pip install -r requirements.txt
-Set up Database:
-    python setup_db.py
-Run server (local):
-    uvicorn main:app --reload
-Access Interactive Doc:
-    http://localhost:8000/docs
+**Clone the repo:**
+- git clone https://github.com/Duck-luv-pie/HTN-Backend.git
+- cd HTN-Backend
 
-Or go to http://34.170.197.1/docs to access the FastAPI deployment on google cloud.
+**Install Dependencies:**
+- pip install -r requirements.txt
+
+**Set up Database:**
+- python setup_db.py
+
+**Run server (local):**
+- uvicorn main:app --reload
+
+**Access Interactive Doc:**
+- http://localhost:8000/docs
+
+Or go to http://34.170.197.1/docs to **access the FastAPI deployment** on google cloud.
 
 ## pytest Testing:
-Run " pytest test_main.py " in terminal
+- Run " pytest test_main.py " in terminal
 What are the tests? Well they are:
 
 - Test #1: Test User Creation
@@ -289,15 +297,15 @@ ex response:
 ## Error Handling:
 All endpoints return appropriate HTTP error codes:
 
-400 - Bad Request (e.g., missing required fields)
-403 - Forbidden (e.g., exceeded scan limit)
-404 - Not Found (e.g., user doesn’t exist)
-500 - Internal Server Error
+- 400 - Bad Request (e.g., missing required fields)
+- 403 - Forbidden (e.g., exceeded scan limit)
+- 404 - Not Found (e.g., user doesn’t exist)
+- 500 - Internal Server Error
 
 ## BONUS FEATURES ADDED:
 - Real-time Check-In System: Users can check in and out of events, and their status is updated live.
 - Friend Badge Scanning: Allows mutual friend connections by scanning friends' badges.
 - Activity Analytics: Provides insights on scan frequencies per hour for activities.
-- Deployment Ready: Configurations included for Google cloud deployment
+- Deployment Ready: Configurations included for Google cloud deployment (http://34.170.197.1/docs)
 
 
