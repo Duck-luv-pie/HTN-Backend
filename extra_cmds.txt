@@ -1,16 +1,15 @@
-Useful Commands to do Stuff: (It's just a nice thing to have esp for newcomers)
-
-(http://127.0.0.1:8000/docs)
+Useful Commands to do Stuff:
+  Production Documentation: http://34.170.197.1/docs
 
 ##########################
 APPLICATION COMMANDS
 ##########################
 
     Start the application:
-uvicorn main:app --reload 
+        uvicorn main:app --reload
 
     Stop the application:
-Control + C (simultaneously)
+        Press Control + C (or Command + C on macOS) in the terminal
 
 
 
@@ -19,90 +18,101 @@ DATABASE/SQL COMMANDS
 ##########################
 
     Initialize the database:
-python -m app.init_db
+        python -m app.init_db
 
-    Check database tables in SQLite: (to go into sqlite)
-sqlite3 database.db
+    Check database tables in SQLite:
+        sqlite3 database.db
 
-    List all tables in db:
-.tables
+    List all tables in the database:
+        .tables
 
-    View stuff in users table:
-SELECT * FROM users;
+    View data in the "users" table:
+        SELECT * FROM users;
 
-    View stuff in scans table:
-SELECT * FROM scans;
+    View data in the "scans" table:
+        SELECT * FROM scans;
 
-    Escape from SQLite prison: (exit SQL)
-.exit
+    Exit SQLite shell:
+        .exit
 
 
 
 ##########################
-Quick Terminal Tests
+QUICK TERMINAL TESTS
 ##########################
 
     //////////////////////////
     THESE ARE FOR USER TESTING:
     //////////////////////////
-    
-    Get all Users:
-curl http://127.0.0.1:8000/users
 
-    -> go to sql then do the following followed by curl http://127.0.0.1:8000/users (output should be jane doe)
-INSERT INTO users (name, email, phone, badge_code, updated_at) 
-VALUES ('Jane Doe', 'jane@example.com', '+1 (555) 987-6543', 'give-seven-food-trade', datetime('now'));
-.exit
+    Get all users:
+        curl http://127.0.0.1:8000/users
 
-    -> will fetch Jane Doe's info (get doxxed)
-curl http://127.0.0.1:8000/users/give-seven-food-trade
+    To insert a test user manually via SQLite (useful for verifying later):
+        Open the SQLite shell:
+            sqlite3 database.db
+        Then run:
+            INSERT INTO users (name, email, phone, badge_code, updated_at) 
+            VALUES ('Jane Doe', 'jane@example.com', '+1 (555) 987-6543', 'give-seven-food-trade', datetime('now'));
+        And exit:
+            .exit
 
-    Updating a user's information:
-curl -X PUT "http://127.0.0.1:8000/users/give-seven-food-trade" \
-     -H "Content-Type: application/json" \
-     -d '{"name": "Jane Smith", "phone": "+1 (555) 333-2222"}'
+    Fetch Jane Doe's info:
+        curl http://127.0.0.1:8000/users/give-seven-food-trade
 
-    -> will fetch Jane Doe's info (get doxxed)
-curl http://127.0.0.1:8000/users/give-seven-food-trade
+    Update a user's information:
+        curl -X PUT "http://127.0.0.1:8000/users/give-seven-food-trade" \
+             -H "Content-Type: application/json" \
+             -d '{"name": "Jane Smith", "phone": "+1 (555) 333-2222"}'
+
+    Verify the update by fetching the user again:
+        curl http://127.0.0.1:8000/users/give-seven-food-trade
+
 
     //////////////////////////
-    THESE ARE FOR SCAN TESTING
+    THESE ARE FOR SCAN TESTING:
     //////////////////////////
 
+    Get all scans:
+        curl http://127.0.0.1:8000/scans
 
-    -> get all scans:
-curl http://127.0.0.1:8000/scans
+    Add a scan for a user:
+        curl -X POST "http://127.0.0.1:8000/scan/give-seven-food-trade" \
+             -H "Content-Type: application/json" \
+             -d '{"activity_name": "ML Workshop", "activity_category": "workshop"}'
 
-    -> add a scan
-curl -X POST "http://127.0.0.1:8000/scan/give-seven-food-trade" \
-     -H "Content-Type: application/json" \
-     -d '{"activity_name": "ML Workshop", "activity_category": "workshop"}'
+    Check scans again:
+        curl http://127.0.0.1:8000/scans
 
-    -> check afterwards again:
-curl http://127.0.0.1:8000/scans/activity
-
-    -> the bonus feature - # of people at activity
-curl "http://127.0.0.1:8000/activity-scans?activity_name=Dinner"
-
+    Bonus Feature - Activity Scan Summary:
+        Get the number of scans for an activity (e.g., Dinner):
+            curl "http://127.0.0.1:8000/activity-scans?activity_name=Dinner"
 
 
 
 ##########################
-Delete Table Information
+DELETE TABLE INFORMATION
 ##########################
 
-    Delete the info:
-sqlite3 database.db
-DELETE FROM users;
-DELETE FROM scans;
+    To delete all records from the tables (use with caution):
 
-    Check to see if it worked:
-SELECT * FROM users;
-SELECT * FROM scans;
+    Open the SQLite shell:
+        sqlite3 database.db
 
-    if so:
-.exit
+    Delete records from the "users" table:
+        DELETE FROM users;
 
-    (THIS ONE DOES NOT REQUIRE python -m app.init_db)
-    HOWEVER IF YOU INSTEAD USED (DROP TABLE users;) then you must 
-    OR IF YOU (rm database.db) <- remove the database then you must
+    Delete records from the "scans" table:
+        DELETE FROM scans;
+
+    Verify that the tables are empty:
+        SELECT * FROM users;
+        SELECT * FROM scans;
+
+    Exit the SQLite shell:
+        .exit
+
+    Note:
+        If you drop the tables (e.g., with DROP TABLE users;) or remove the database file (rm database.db),
+        you must reinitialize the database with:
+            python -m app.init_db

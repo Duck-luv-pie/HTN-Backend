@@ -13,7 +13,7 @@ try:
     
     print("db tables sucessfully created")
     
-    #Verify tables afterwards
+    #Verify tables afterwards 
     print("Tables after creation:", Base.metadata.tables.keys())
 except Exception as e:
     print("Fatal error during DB creation:", e)

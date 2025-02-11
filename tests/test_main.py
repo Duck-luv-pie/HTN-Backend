@@ -225,7 +225,7 @@ def test_check_out_non_existent_user():
     response = client.post("/check-out/orange-river-calm-flower")
     assert response.status_code == 404  
 
-#Test 17: Test Get Check-In Status for Non-Existent User
+#Test 17: Test Get Check-In Status for Non-Existent User 
 def test_check_status_non_existent_user():
     response = client.get("/check-status/silver-leaf-warm-breeze")
     assert response.status_code == 200  #Default to "OUT"

@@ -11,7 +11,7 @@ class User(Base):
     name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     phone = Column(String, nullable=False)
-    badge_code = Column(String, unique=True, nullable=False)
+    badge_code = Column(String, unique=True, nullable=False) #four word string
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     scans = relationship("Scan", back_populates="user", cascade="all, delete")
