@@ -146,7 +146,7 @@ Use http://34.170.197.1/docs to **access FastAPI deployment**. This was done usi
 Or go to http://34.170.197.1/docs to **access the FastAPI deployment** on google cloud.
 
 ## pytest Testing:
-- Run " pytest test_main.py " in terminal
+- Run " pytest test_main.py " in terminal (Make sure you are in the correct file directory (ie under the folder: tests))
 What are the tests? Well they are:
 
 - Test #1: Test User Creation
